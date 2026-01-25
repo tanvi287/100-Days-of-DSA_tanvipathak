@@ -1,0 +1,83 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+struct Node {
+    int data;
+    struct Node* next;
+};
+
+// Helper to create a new node
+struct Node* createNode(int val) {
+    struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
+    newNode->data = val;
+    newNode->next = NULL;
+    return newNode;
+}
+
+// Function to get the length of a list
+int getLength(struct Node* head) {
+    int len = 0;
+    while (head) {
+        len++;
+        head = head->next;
+    }
+    return len;
+}
+
+// Function to find intersection
+void findIntersection(struct Node* head1, struct Node* head2) {
+    int len1 = getLength(head1);
+    int len2 = getLength(head2);
+
+    int diff = abs(len1 - len2);
+
+    // Advance the pointer of the longer list by 'diff' steps
+    if (len1 > len2) {
+        for (int i = 0; i < diff; i++) head1 = head1->next;
+    } else {
+        for (int i = 0; i < diff; i++) head2 = head2->next;
+    }
+
+    // Traverse both simultaneously until they meet
+    // Note: In a real system, we compare addresses. 
+    // Here, we compare values as per the problem example.
+    while (head1 != NULL && head2 != NULL) {
+        if (head1->data == head2->data) {
+            printf("%d\n", head1->data);
+            return;
+        }
+        head1 = head1->next;
+        head2 = head2->next;
+    }
+
+    printf("No Intersection\n");
+}
+
+int main() {
+    int n, m, val;
+    struct Node *head1 = NULL, *tail1 = NULL, *head2 = NULL, *tail2 = NULL;
+
+    // Input List 1
+    if (scanf("%d", &n) == 1 && n > 0) {
+        for (int i = 0; i < n; i++) {
+            scanf("%d", &val);
+            struct Node* newNode = createNode(val);
+            if (!head1) head1 = tail1 = newNode;
+            else { tail1->next = newNode; tail1 = newNode; }
+        }
+    }
+
+    // Input List 2
+    if (scanf("%d", &m) == 1 && m > 0) {
+        for (int i = 0; i < m; i++) {
+            scanf("%d", &val);
+            struct Node* newNode = createNode(val);
+            if (!head2) head2 = tail2 = newNode;
+            else { tail2->next = newNode; tail2 = newNode; }
+        }
+    }
+
+    findIntersection(head1, head2);
+
+    return 0;
+}

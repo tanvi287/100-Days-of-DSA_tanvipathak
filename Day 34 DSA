@@ -1,0 +1,71 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <ctype.h>
+
+// Node structure for the linked list stack
+struct Node {
+    int data;
+    struct Node* next;
+};
+
+// Push an operand to the top of the list
+void push(struct Node** top, int val) {
+    struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
+    if (!newNode) return;
+    newNode->data = val;
+    newNode->next = *top;
+    *top = newNode;
+}
+
+// Pop an operand from the top of the list
+int pop(struct Node** top) {
+    if (*top == NULL) return 0;
+    struct Node* temp = *top;
+    int val = temp->data;
+    *top = (*top)->next;
+    free(temp);
+    return val;
+}
+
+int evaluatePostfix(char* exp) {
+    struct Node* stack = NULL;
+
+    for (int i = 0; exp[i] != '\0'; i++) {
+        // Skip whitespace
+        if (exp[i] == ' ') continue;
+
+        // If character is a digit, handle multi-digit numbers
+        if (isdigit(exp[i])) {
+            int num = 0;
+            while (isdigit(exp[i])) {
+                num = num * 10 + (exp[i] - '0');
+                i++;
+            }
+            i--; 
+            push(&stack, num);
+        } 
+        // If character is an operator
+        else {
+            int op2 = pop(&stack); // Second operand
+            int op1 = pop(&stack); // First operand
+
+            switch (exp[i]) {
+                case '+': push(&stack, op1 + op2); break;
+                case '-': push(&stack, op1 - op2); break;
+                case '*': push(&stack, op1 * op2); break;
+                case '/': push(&stack, op1 / op2); break;
+            }
+        }
+    }
+    return pop(&stack);
+}
+
+int main() {
+    char exp[100];
+    // Read the full expression string
+    scanf("%[^\n]s", exp);
+
+    printf("%d\n", evaluatePostfix(exp));
+
+    return 0;
+}

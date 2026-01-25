@@ -1,0 +1,35 @@
+#include <stdio.h>
+
+int main() {
+    int n;
+
+    // Read the size of the array
+    if (scanf("%d", &n) != 1) return 0;
+
+    // A constraint check: if n is 0, there is no max/min
+    if (n <= 0) return 0;
+
+    int arr[n];
+    for (int i = 0; i < n; i++) {
+        scanf("%d", &arr[i]);
+    }
+
+    // Start by assuming the first element is both max and min
+    int max = arr[0];
+    int min = arr[0];
+
+    // Traverse the array starting from the second element
+    for (int i = 1; i < n; i++) {
+        if (arr[i] > max) {
+            max = arr[i];
+        } else if (arr[i] < min) {
+            min = arr[i];
+        }
+    }
+
+    // Print the results as per the example format
+    printf("Max: %d\n", max);
+    printf("Min: %d\n", min);
+
+    return 0;
+}

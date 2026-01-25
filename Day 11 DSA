@@ -1,0 +1,42 @@
+#include <stdio.h>
+
+int main() {
+    int m, n;
+
+    // Read rows and columns
+    if (scanf("%d %d", &m, &n) != 2) return 0;
+
+    int matrix1[m][n];
+    int matrix2[m][n];
+
+    // Read the first matrix
+    for (int i = 0; i < m; i++) {
+        for (int j = 0; j < n; j++) {
+            scanf("%d", &matrix1[i][j]);
+        }
+    }
+
+    // Read the second matrix
+    for (int i = 0; i < m; i++) {
+        for (int j = 0; j < n; j++) {
+            scanf("%d", &matrix2[i][j]);
+        }
+    }
+
+    // Calculate and print the resultant matrix
+    for (int i = 0; i < m; i++) {
+        for (int j = 0; j < n; j++) {
+            // Add corresponding elements
+            printf("%d", matrix1[i][j] + matrix2[i][j]);
+            
+            // Print space between elements, but not after the last element in a row
+            if (j < n - 1) {
+                printf(" ");
+            }
+        }
+        // Move to the next line after printing a full row
+        printf("\n");
+    }
+
+    return 0;
+}

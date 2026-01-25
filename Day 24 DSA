@@ -1,0 +1,77 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+struct Node {
+    int data;
+    struct Node* next;
+};
+
+// Helper to create a node
+struct Node* createNode(int val) {
+    struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
+    newNode->data = val;
+    newNode->next = NULL;
+    return newNode;
+}
+
+void deleteKey(struct Node** head, int key) {
+    struct Node *temp = *head, *prev = NULL;
+
+    // Case 1: The head node itself holds the key
+    if (temp != NULL && temp->data == key) {
+        *head = temp->next; // Change head
+        free(temp);         // Free old head
+        return;
+    }
+
+    // Case 2: Search for the key, keep track of the previous node
+    while (temp != NULL && temp->data != key) {
+        prev = temp;
+        temp = temp->next;
+    }
+
+    // Case 3: Key was not found in the list
+    if (temp == NULL) return;
+
+    // Unlink the node from the linked list
+    prev->next = temp->next;
+
+    // Free memory
+    free(temp);
+}
+
+int main() {
+    int n, val, key;
+    struct Node *head = NULL, *tail = NULL;
+
+    // Read n
+    if (scanf("%d", &n) != 1 || n <= 0) return 0;
+
+    // Build the list
+    for (int i = 0; i < n; i++) {
+        scanf("%d", &val);
+        struct Node* newNode = createNode(val);
+        if (!head) {
+            head = tail = newNode;
+        } else {
+            tail->next = newNode;
+            tail = newNode;
+        }
+    }
+
+    // Read key to delete
+    scanf("%d", &key);
+
+    // Perform deletion
+    deleteKey(&head, key);
+
+    // Print result
+    struct Node* curr = head;
+    while (curr) {
+        printf("%d%s", curr->data, (curr->next ? " " : ""));
+        curr = curr->next;
+    }
+    printf("\n");
+
+    return 0;
+}

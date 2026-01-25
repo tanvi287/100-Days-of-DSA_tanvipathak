@@ -1,0 +1,64 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+// Define the structure for a polynomial term
+struct Term {
+    int coeff;
+    int exp;
+    struct Term* next;
+};
+
+// Function to create a new term node
+struct Term* createTerm(int c, int e) {
+    struct Term* newNode = (struct Term*)malloc(sizeof(struct Term));
+    newNode->coeff = c;
+    newNode->exp = e;
+    newNode->next = NULL;
+    return newNode;
+}
+
+// Function to display the polynomial in standard form
+void displayPolynomial(struct Term* head) {
+    struct Term* temp = head;
+    while (temp != NULL) {
+        // Print the term
+        if (temp->exp == 0) {
+            printf("%d", temp->coeff);
+        } else if (temp->exp == 1) {
+            printf("%dx", temp->coeff);
+        } else {
+            printf("%dx^%d", temp->coeff, temp->exp);
+        }
+
+        // Move to next and print " + " if more terms exist
+        temp = temp->next;
+        if (temp != NULL) {
+            printf(" + ");
+        }
+    }
+    printf("\n");
+}
+
+int main() {
+    int n, c, e;
+    if (scanf("%d", &n) != 1 || n <= 0) return 0;
+
+    struct Term *head = NULL, *tail = NULL;
+
+    for (int i = 0; i < n; i++) {
+        scanf("%d %d", &c, &e);
+        struct Term* newNode = createTerm(c, e);
+        
+        if (head == NULL) {
+            head = newNode;
+            tail = head;
+        } else {
+            tail->next = newNode;
+            tail = newNode;
+        }
+    }
+
+    displayPolynomial(head);
+
+    return 0;
+}

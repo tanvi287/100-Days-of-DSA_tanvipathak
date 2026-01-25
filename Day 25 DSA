@@ -1,0 +1,66 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+struct Node {
+    int data;
+    struct Node* next;
+};
+
+// Function to create a new node
+struct Node* createNode(int value) {
+    struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
+    if (!newNode) return NULL;
+    newNode->data = value;
+    newNode->next = NULL;
+    return newNode;
+}
+
+int main() {
+    int n, val, key;
+    struct Node *head = NULL, *tail = NULL;
+
+    // 1. Read the number of nodes
+    if (scanf("%d", &n) != 1 || n <= 0) {
+        // If n is 0, and the key is provided, the count is always 0
+        return 0;
+    }
+
+    // 2. Build the linked list
+    for (int i = 0; i < n; i++) {
+        if (scanf("%d", &val) == 1) {
+            struct Node* newNode = createNode(val);
+            if (head == NULL) {
+                head = tail = newNode;
+            } else {
+                tail->next = newNode;
+                tail = newNode;
+            }
+        }
+    }
+
+    // 3. Read the key to search for
+    scanf("%d", &key);
+
+    // 4. Traverse and count occurrences
+    int count = 0;
+    struct Node* current = head;
+    while (current != NULL) {
+        if (current->data == key) {
+            count++;
+        }
+        current = current->next;
+    }
+
+    // 5. Output the result
+    printf("%d\n", count);
+
+    // 6. Free allocated memory
+    current = head;
+    while (current != NULL) {
+        struct Node* nextNode = current->next;
+        free(current);
+        current = nextNode;
+    }
+
+    return 0;
+}

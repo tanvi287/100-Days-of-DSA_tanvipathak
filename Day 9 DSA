@@ -1,0 +1,30 @@
+#include <stdio.h>
+#include <string.h>
+
+int main() {
+    char str[1001]; // Array to store the code name (max length 1000)
+
+    // Read the input string
+    if (scanf("%s", str) != 1) return 0;
+
+    int n = strlen(str);
+    int left = 0;
+    int right = n - 1;
+
+    // Mirror operation using two pointers
+    while (left < right) {
+        // Swap characters
+        char temp = str[left];
+        str[left] = str[right];
+        str[right] = temp;
+
+        // Move pointers towards the middle
+        left++;
+        right--;
+    }
+
+    // Print the mirrored code name
+    printf("%s\n", str);
+
+    return 0;
+}

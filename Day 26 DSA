@@ -1,0 +1,62 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+// Define the structure for a Doubly Linked List Node
+struct Node {
+    int data;
+    struct Node* next;
+    struct Node* prev;
+};
+
+// Function to create a new DLL node
+struct Node* createNode(int value) {
+    struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
+    if (!newNode) return NULL;
+    newNode->data = value;
+    newNode->next = NULL;
+    newNode->prev = NULL;
+    return newNode;
+}
+
+int main() {
+    int n, val;
+    struct Node *head = NULL, *tail = NULL;
+
+    // 1. Read number of nodes
+    if (scanf("%d", &n) != 1 || n <= 0) return 0;
+
+    // 2. Build the Doubly Linked List
+    for (int i = 0; i < n; i++) {
+        if (scanf("%d", &val) == 1) {
+            struct Node* newNode = createNode(val);
+            
+            if (head == NULL) {
+                head = tail = newNode;
+            } else {
+                // Link the new node with the current tail
+                tail->next = newNode;
+                newNode->prev = tail;
+                // Move the tail to the new node
+                tail = newNode;
+            }
+        }
+    }
+
+    // 3. Forward Traversal
+    struct Node* current = head;
+    while (current != NULL) {
+        printf("%d%s", current->data, (current->next ? " " : ""));
+        current = current->next;
+    }
+    printf("\n");
+
+    // 4. Memory Cleanup
+    current = head;
+    while (current != NULL) {
+        struct Node* nextNode = current->next;
+        free(current);
+        current = nextNode;
+    }
+
+    return 0;
+}

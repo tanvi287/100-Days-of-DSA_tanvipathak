@@ -1,0 +1,44 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+#define MAX 1000
+
+int main() {
+    int n, m, val;
+    int stack[MAX];
+    int top = -1;
+
+    // 1. Read number of elements to push
+    if (scanf("%d", &n) != 1) return 0;
+
+    // 2. Perform push operations
+    for (int i = 0; i < n; i++) {
+        scanf("%d", &val);
+        if (top < MAX - 1) {
+            stack[++top] = val;
+        }
+    }
+
+    // 3. Read number of pop operations
+    if (scanf("%d", &m) != 1) return 0;
+
+    // 4. Perform m pop operations
+    for (int i = 0; i < m; i++) {
+        if (top >= 0) {
+            top--; // Decrementing top effectively removes the element
+        }
+    }
+
+    // 5. Display remaining elements from top to bottom
+    if (top == -1) {
+        return 0; // Stack is empty
+    }
+    
+    for (int i = top; i >= 0; i--) {
+        printf("%d", stack[i]);
+        if (i > 0) printf(" ");
+    }
+    printf("\n");
+
+    return 0;
+}

@@ -1,0 +1,55 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+// Define the structure for a Node
+struct Node {
+    int data;
+    struct Node* next;
+};
+
+// Function to create a new node
+struct Node* createNode(int value) {
+    struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
+    newNode->data = value;
+    newNode->next = NULL;
+    return newNode;
+}
+
+int main() {
+    int n, val;
+    if (scanf("%d", &n) != 1 || n <= 0) return 0;
+
+    struct Node *head = NULL, *temp = NULL;
+
+    // Creation: Building the list
+    for (int i = 0; i < n; i++) {
+        scanf("%d", &val);
+        struct Node* newNode = createNode(val);
+
+        if (head == NULL) {
+            head = newNode; // First node becomes the head
+            temp = head;
+        } else {
+            temp->next = newNode; // Link previous node to the new node
+            temp = temp->next;    // Move temp to the last node
+        }
+    }
+
+    // Traversal: Printing the list
+    struct Node* current = head;
+    while (current != NULL) {
+        printf("%d%s", current->data, (current->next ? " " : ""));
+        current = current->next;
+    }
+    printf("\n");
+
+    // Freeing memory (Good practice in C)
+    current = head;
+    while (current != NULL) {
+        struct Node* nextNode = current->next;
+        free(current);
+        current = nextNode;
+    }
+
+    return 0;
+}

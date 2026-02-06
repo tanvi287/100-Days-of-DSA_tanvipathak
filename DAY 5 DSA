@@ -1,0 +1,42 @@
+#include <stdio.h>
+
+int main() {
+    int p, q;
+
+    // Read log 1
+    if (scanf("%d", &p) != 1) return 0;
+    int log1[p];
+    for (int i = 0; i < p; i++) scanf("%d", &log1[i]);
+
+    // Read log 2
+    if (scanf("%d", &q) != 1) return 0;
+    int log2[q];
+    for (int i = 0; i < q; i++) scanf("%d", &log2[i]);
+
+    int i = 0, j = 0;
+    int first = 1; // Flag to handle space separation in output
+
+    // Compare and merge until one log is exhausted
+    while (i < p && j < q) {
+        if (!first) printf(" ");
+        if (log1[i] <= log2[j]) {
+            printf("%d", log1[i++]);
+        } else {
+            printf("%d", log2[j++]);
+        }
+        first = 0;
+    }
+
+    // Append remaining elements from log 1, if any
+    while (i < p) {
+        printf(" %d", log1[i++]);
+    }
+
+    // Append remaining elements from log 2, if any
+    while (j < q) {
+        printf(" %d", log2[j++]);
+    }
+
+    printf("\n");
+    return 0;
+}

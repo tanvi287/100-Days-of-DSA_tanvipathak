@@ -1,0 +1,14 @@
+class Solution {
+public:
+    int fib(int n) {
+        // Base cases: F(0) = 0, F(1) = 1
+        if (n == 0) return 0;
+        if (n == 1) return 1;
+        
+        // Recursive step
+        // Note: For LeetCode, an iterative or memoized approach 
+        // is usually preferred for better performance, but this 
+        // follows your specific recursive requirement.
+        return fib(n - 1) + fib(n - 2);
+    }
+};

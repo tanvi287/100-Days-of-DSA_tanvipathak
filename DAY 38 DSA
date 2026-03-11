@@ -1,0 +1,133 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+struct Node {
+    int data;
+    Node *next, *prev;
+    Node(int val) : data(val), next(nullptr), prev(nullptr) {}
+};
+
+class Deque {
+private:
+    Node *head, *tail;
+    int count;
+
+public:
+    Deque() : head(nullptr), tail(nullptr), count(0) {}
+
+    // O(1) Operations
+    void push_front(int val) {
+        Node* newNode = new Node(val);
+        if (empty()) head = tail = newNode;
+        else {
+            newNode->next = head;
+            head->prev = newNode;
+            head = newNode;
+        }
+        count++;
+    }
+
+    void push_back(int val) {
+        Node* newNode = new Node(val);
+        if (empty()) head = tail = newNode;
+        else {
+            newNode->prev = tail;
+            tail->next = newNode;
+            tail = newNode;
+        }
+        count++;
+    }
+
+    void pop_front() {
+        if (empty()) return;
+        Node* temp = head;
+        head = head->next;
+        if (head) head->prev = nullptr;
+        else tail = nullptr;
+        delete temp;
+        count--;
+    }
+
+    void pop_back() {
+        if (empty()) return;
+        Node* temp = tail;
+        tail = tail->prev;
+        if (tail) tail->next = nullptr;
+        else head = nullptr;
+        delete temp;
+        count--;
+    }
+
+    int front() { return head ? head->data : -1; }
+    int back() { return tail ? tail->data : -1; }
+    bool empty() { return count == 0; }
+    int size() { return count; }
+
+    // O(n) Operations
+    void clear() {
+        while (!empty()) pop_front();
+    }
+
+    void reverse() {
+        if (empty() || head == tail) return;
+        Node* curr = head;
+        Node* temp = nullptr;
+        while (curr) {
+            temp = curr->prev;
+            curr->prev = curr->next;
+            curr->next = temp;
+            curr = curr->prev; // Moving to original next
+        }
+        temp = head;
+        head = tail;
+        tail = temp;
+    }
+
+    // O(n log n) Operation
+    void sort() {
+        if (size() < 2) return;
+        // Copy to vector for efficient sorting
+        std::vector<int> vals;
+        Node* temp = head;
+        while (temp) {
+            vals.push_back(temp->data);
+            temp = temp->next;
+        }
+        std::sort(vals.begin(), vals.end());
+        
+        // Re-assign values to existing nodes
+        temp = head;
+        for (int v : vals) {
+            temp->data = v;
+            temp = temp->next;
+        }
+    }
+
+    void display() {
+        Node* temp = head;
+        while (temp) {
+            std::cout << temp->data << " ";
+            temp = temp->next;
+        }
+        std::cout << std::endl;
+    }
+};
+
+int main() {
+    Deque dq;
+    dq.push_back(30);
+    dq.push_back(10);
+    dq.push_front(40);
+    dq.push_back(20);
+
+    std::cout << "Original: "; dq.display(); // 40 30 10 20
+
+    dq.reverse();
+    std::cout << "Reversed: "; dq.display(); // 20 10 30 40
+
+    dq.sort();
+    std::cout << "Sorted:   "; dq.display(); // 10 20 30 40
+
+    return 0;
+}

@@ -1,0 +1,69 @@
+#include <iostream>
+#include <vector>
+#include <queue>
+
+struct Node {
+    int data;
+    Node *left, *right;
+    Node(int val) : data(val), left(nullptr), right(nullptr) {}
+};
+
+// Function to construct tree from level order array
+Node* buildTree(const std::vector<int>& arr) {
+    if (arr.empty() || arr[0] == -1) return nullptr;
+
+    Node* root = new Node(arr[0]);
+    std::queue<Node*> q;
+    q.push(root);
+
+    int i = 1;
+    while (i < arr.size()) {
+        Node* curr = q.front();
+        q.pop();
+
+        // Process Left Child
+        if (i < arr.size() && arr[i] != -1) {
+            curr->left = new Node(arr[i]);
+            q.push(curr->left);
+        }
+        i++;
+
+        // Process Right Child
+        if (i < arr.size() && arr[i] != -1) {
+            curr->right = new Node(arr[i]);
+            q.push(curr->right);
+        }
+        i++;
+    }
+    return root;
+}
+
+// Standard Inorder Traversal: Left -> Root -> Right
+void inorder(Node* root, bool &first) {
+    if (!root) return;
+    inorder(root->left, first);
+    
+    if (!first) std::cout << " ";
+    std::cout << root->data;
+    first = false;
+    
+    inorder(root->right, first);
+}
+
+int main() {
+    int n;
+    if (!(std::cin >> n)) return 0;
+
+    std::vector<int> arr(n);
+    for (int i = 0; i < n; i++) {
+        std::cin >> arr[i];
+    }
+
+    Node* root = buildTree(arr);
+    
+    bool first = true;
+    inorder(root, first);
+    std::cout << std::endl;
+
+    return 0;
+}

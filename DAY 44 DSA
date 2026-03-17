@@ -1,0 +1,76 @@
+#include <iostream>
+#include <vector>
+#include <queue>
+
+struct Node {
+    int data;
+    Node *left, *right;
+    Node(int val) : data(val), left(nullptr), right(nullptr) {}
+};
+
+// Construct Tree from Level-Order Input
+Node* buildTree(const std::vector<int>& arr) {
+    if (arr.empty() || arr[0] == -1) return nullptr;
+    Node* root = new Node(arr[0]);
+    std::queue<Node*> q;
+    q.push(root);
+    int i = 1;
+    while (i < arr.size()) {
+        Node* curr = q.front();
+        q.pop();
+        if (i < arr.size() && arr[i] != -1) {
+            curr->left = new Node(arr[i]);
+            q.push(curr->left);
+        }
+        i++;
+        if (i < arr.size() && arr[i] != -1) {
+            curr->right = new Node(arr[i]);
+            q.push(curr->right);
+        }
+        i++;
+    }
+    return root;
+}
+
+// Helper to handle spacing in output
+void printVal(int val, bool &first) {
+    if (!first) std::cout << " ";
+    std::cout << val;
+    first = false;
+}
+
+void inorder(Node* root, bool &first) {
+    if (!root) return;
+    inorder(root->left, first);
+    printVal(root->data, first);
+    inorder(root->right, first);
+}
+
+void preorder(Node* root, bool &first) {
+    if (!root) return;
+    printVal(root->data, first);
+    preorder(root->left, first);
+    preorder(root->right, first);
+}
+
+void postorder(Node* root, bool &first) {
+    if (!root) return;
+    postorder(root->left, first);
+    postorder(root->right, first);
+    printVal(root->data, first);
+}
+
+int main() {
+    int n;
+    if (!(std::cin >> n)) return 0;
+    std::vector<int> arr(n);
+    for (int i = 0; i < n; i++) std::cin >> arr[i];
+
+    Node* root = buildTree(arr);
+
+    bool f1 = true; inorder(root, f1);   std::cout << std::endl;
+    bool f2 = true; preorder(root, f2);  std::cout << std::endl;
+    bool f3 = true; postorder(root, f3); std::cout << std::endl;
+
+    return 0;
+}

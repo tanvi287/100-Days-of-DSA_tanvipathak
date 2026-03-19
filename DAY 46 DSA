@@ -1,0 +1,40 @@
+#include <vector>
+#include <queue>
+
+struct TreeNode {
+    int val;
+    TreeNode *left, *right;
+    TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+};
+
+class Solution {
+public:
+    std::vector<std::vector<int>> levelOrder(TreeNode* root) {
+        std::vector<std::vector<int>> result;
+        if (!root) return result;
+
+        std::queue<TreeNode*> q;
+        q.push(root);
+
+        while (!q.empty()) {
+            int size = q.size(); // Number of nodes at the current level
+            std::vector<int> currentLevel;
+
+            for (int i = 0; i < size; i++) {
+                TreeNode* curr = q.front();
+                q.pop();
+
+                currentLevel.push_back(curr->val);
+
+                // Add children to the queue for the next level
+                if (curr->left) q.push(curr->left);
+                if (curr->right) q.push(curr->right);
+            }
+
+            // After processing the whole level, add it to the result
+            result.push_back(currentLevel);
+        }
+
+        return result;
+    }
+};

@@ -1,0 +1,31 @@
+#include <iostream>
+
+struct TreeNode {
+    int val;
+    TreeNode *left, *right;
+    TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+};
+
+class Solution {
+public:
+    /**
+     * Inserts a value into the BST and returns the root of the modified tree.
+     */
+    TreeNode* insertIntoBST(TreeNode* root, int val) {
+        // Base Case: We found an empty spot
+        if (root == nullptr) {
+            return new TreeNode(val);
+        }
+
+        // Recursion Step
+        if (val < root->val) {
+            // Move to the left subtree
+            root->left = insertIntoBST(root->left, val);
+        } else {
+            // Move to the right subtree
+            root->right = insertIntoBST(root->right, val);
+        }
+
+        return root;
+    }
+};

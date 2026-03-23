@@ -1,0 +1,30 @@
+#include <iostream>
+
+struct TreeNode {
+    int val;
+    TreeNode *left, *right;
+    TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+};
+
+class Solution {
+public:
+    /**
+     * Searches for a node in a BST.
+     * @return The node containing the value, or NULL if not found.
+     */
+    TreeNode* searchBST(TreeNode* root, int val) {
+        // Base Case: Not found or found the target
+        if (root == nullptr || root->val == val) {
+            return root;
+        }
+
+        // Recursive Step
+        if (val < root->val) {
+            // Target is smaller, look in the left subtree
+            return searchBST(root->left, val);
+        } else {
+            // Target is larger, look in the right subtree
+            return searchBST(root->right, val);
+        }
+    }
+};

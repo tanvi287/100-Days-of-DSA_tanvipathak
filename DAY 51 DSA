@@ -1,0 +1,66 @@
+#include <iostream>
+#include <vector>
+#include <queue>
+
+struct Node {
+    int data;
+    Node *left, *right;
+    Node(int val) : data(val), left(nullptr), right(nullptr) {}
+};
+
+// Standard Level-Order Tree Construction
+Node* buildTree(const std::vector<int>& arr) {
+    if (arr.empty() || arr[0] == -1) return nullptr;
+    Node* root = new Node(arr[0]);
+    std::queue<Node*> q;
+    q.push(root);
+    int i = 1;
+    while (i < arr.size()) {
+        Node* curr = q.front();
+        q.pop();
+        if (i < arr.size() && arr[i] != -1) {
+            curr->left = new Node(arr[i]);
+            q.push(curr->left);
+        }
+        i++;
+        if (i < arr.size() && arr[i] != -1) {
+            curr->right = new Node(arr[i]);
+            q.push(curr->right);
+        }
+        i++;
+    }
+    return root;
+}
+
+// LCA Logic for BST
+Node* findLCA(Node* root, int p, int q) {
+    if (!root) return nullptr;
+
+    // If both nodes are smaller than root, move left
+    if (p < root->data && q < root->data) {
+        return findLCA(root->left, p, q);
+    }
+    // If both nodes are larger than root, move right
+    if (p > root->data && q > root->data) {
+        return findLCA(root->right, p, q);
+    }
+    // If nodes "split" (one left, one right) or one is the root
+    return root;
+}
+
+int main() {
+    int n;
+    if (!(std::cin >> n)) return 0;
+    std::vector<int> arr(n);
+    for (int i = 0; i < n; i++) std::cin >> arr[i];
+
+    int p, q;
+    std::cin >> p >> q;
+
+    Node* root = buildTree(arr);
+    Node* lca = findLCA(root, p, q);
+
+    if (lca) std::cout << lca->data << std::endl;
+
+    return 0;
+}

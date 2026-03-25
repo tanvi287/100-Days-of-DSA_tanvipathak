@@ -1,0 +1,70 @@
+#include <iostream>
+#include <vector>
+#include <queue>
+
+struct Node {
+    int data;
+    Node *left, *right;
+    Node(int val) : data(val), left(nullptr), right(nullptr) {}
+};
+
+// Standard Level-Order Tree Construction
+Node* buildTree(const std::vector<int>& arr) {
+    if (arr.empty() || arr[0] == -1) return nullptr;
+    Node* root = new Node(arr[0]);
+    std::queue<Node*> q;
+    q.push(root);
+    int i = 1;
+    while (i < arr.size()) {
+        Node* curr = q.front();
+        q.pop();
+        if (i < arr.size() && arr[i] != -1) {
+            curr->left = new Node(arr[i]);
+            q.push(curr->left);
+        }
+        i++;
+        if (i < arr.size() && arr[i] != -1) {
+            curr->right = new Node(arr[i]);
+            q.push(curr->right);
+        }
+        i++;
+    }
+    return root;
+}
+
+// LCA Logic for General Binary Tree
+Node* findLCA(Node* root, int p, int q) {
+    // Base Case: If root is null or we found p or q
+    if (!root || root->data == p || root->data == q) {
+        return root;
+    }
+
+    // Search in subtrees
+    Node* left = findLCA(root->left, p, q);
+    Node* right = findLCA(root->right, p, q);
+
+    // If both left and right are non-null, this node is the LCA
+    if (left && right) {
+        return root;
+    }
+
+    // Otherwise, return the one that is non-null
+    return (left != nullptr) ? left : right;
+}
+
+int main() {
+    int n;
+    if (!(std::cin >> n)) return 0;
+    std::vector<int> arr(n);
+    for (int i = 0; i < n; i++) std::cin >> arr[i];
+
+    int p_val, q_val;
+    std::cin >> p_val >> q_val;
+
+    Node* root = buildTree(arr);
+    Node* lca = findLCA(root, p_val, q_val);
+
+    if (lca) std::cout << lca->data << std::endl;
+
+    return 0;
+}

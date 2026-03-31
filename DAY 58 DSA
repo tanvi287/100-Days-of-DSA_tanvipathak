@@ -1,0 +1,64 @@
+#include <iostream>
+#include <vector>
+#include <unordered_map>
+
+struct Node {
+    int data;
+    Node *left, *right;
+    Node(int val) : data(val), left(nullptr), right(nullptr) {}
+};
+
+// Global map to find indices in Inorder array in O(1)
+std::unordered_map<int, int> inorderMap;
+int preorderIndex = 0;
+
+/**
+ * Recursive function to build the tree.
+ * @param preorder The preorder traversal array
+ * @param left Start index in the inorder array
+ * @param right End index in the inorder array
+ */
+Node* buildTree(const std::vector<int>& preorder, int left, int right) {
+    if (left > right) return nullptr;
+
+    // 1. Pick current root from preorder
+    int rootVal = preorder[preorderIndex++];
+    Node* root = new Node(rootVal);
+
+    // 2. Find position of this root in inorder traversal
+    int inorderIndex = inorderMap[rootVal];
+
+    // 3. Recursively build subtrees
+    // Note: Left subtree must be built first because preorder is (Root, Left, Right)
+    root->left = buildTree(preorder, left, inorderIndex - 1);
+    root->right = buildTree(preorder, inorderIndex + 1, right);
+
+    return root;
+}
+
+// Function to print Postorder Traversal
+void printPostorder(Node* root) {
+    if (!root) return;
+    printPostorder(root->left);
+    printPostorder(root->right);
+    std::cout << root->data << " ";
+}
+
+int main() {
+    int n;
+    if (!(std::cin >> n)) return 0;
+
+    std::vector<int> preorder(n), inorder(n);
+    for (int i = 0; i < n; i++) std::cin >> preorder[i];
+    for (int i = 0; i < n; i++) {
+        std::cin >> inorder[i];
+        inorderMap[inorder[i]] = i; // Map value to index for O(1) lookup
+    }
+
+    Node* root = buildTree(preorder, 0, n - 1);
+    
+    printPostorder(root);
+    std::cout << std::endl;
+
+    return 0;
+}

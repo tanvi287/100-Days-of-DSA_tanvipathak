@@ -1,0 +1,44 @@
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+/**
+ * Builds and prints an Adjacency List for a graph.
+ * Supports both directed and undirected graphs.
+ */
+void buildAdjacencyList() {
+    int n, m;
+    // n = number of vertices, m = number of edges
+    if (!(cin >> n >> m)) return;
+
+    // Create a vector of vectors. Size is n.
+    // Each adj[i] will store neighbors of vertex i.
+    vector<vector<int>> adj(n);
+
+    for (int i = 0; i < m; i++) {
+        int u, v;
+        cin >> u >> v;
+
+        // Add edge u -> v
+        adj[u].push_back(v);
+
+        // For an UNDIRECTED graph, also add v -> u
+        adj[v].push_back(u);
+    }
+
+    // Output the adjacency list
+    cout << "\nAdjacency List Representation:" << endl;
+    for (int i = 0; i < n; i++) {
+        cout << i << ": ";
+        for (size_t j = 0; j < adj[i].size(); j++) {
+            cout << adj[i][j] << (j == adj[i].size() - 1 ? "" : " -> ");
+        }
+        cout << endl;
+    }
+}
+
+int main() {
+    buildAdjacencyList();
+    return 0;
+}

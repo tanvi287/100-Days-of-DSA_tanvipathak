@@ -1,0 +1,54 @@
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+/**
+ * Recursive helper function for DFS
+ * @param curr The vertex we are currently visiting
+ * @param adj The adjacency list
+ * @param visited Boolean array to track visited nodes
+ */
+void dfsRecursive(int curr, const vector<vector<int>>& adj, vector<bool>& visited) {
+    // 1. Mark the current node as visited
+    visited[curr] = true;
+    
+    // 2. Process the current node (Print it)
+    cout << curr << " ";
+
+    // 3. Visit all unvisited neighbors
+    for (int neighbor : adj[curr]) {
+        if (!visited[neighbor]) {
+            dfsRecursive(neighbor, adj, visited);
+        }
+    }
+}
+
+void performDFS(int n, const vector<vector<int>>& adj, int s) {
+    vector<bool> visited(n, false);
+    
+    cout << "DFS Traversal starting from vertex " << s << ":" << endl;
+    dfsRecursive(s, adj, visited);
+    cout << endl;
+}
+
+int main() {
+    int n, m;
+    // n = vertices, m = edges
+    if (!(cin >> n >> m)) return 0;
+
+    vector<vector<int>> adj(n);
+    for (int i = 0; i < m; i++) {
+        int u, v;
+        cin >> u >> v;
+        adj[u].push_back(v);
+        adj[v].push_back(u); // Remove this for a directed graph
+    }
+
+    int startNode;
+    cin >> startNode;
+
+    performDFS(n, adj, startNode);
+
+    return 0;
+}

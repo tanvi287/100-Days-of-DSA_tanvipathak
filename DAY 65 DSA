@@ -1,0 +1,61 @@
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+/**
+ * DFS helper to detect cycle
+ * @param curr Current node
+ * @param parent The node we arrived from
+ * @param adj Adjacency list
+ * @param visited Visited tracker
+ */
+bool hasCycleDFS(int curr, int parent, const vector<vector<int>>& adj, vector<bool>& visited) {
+    visited[curr] = true;
+
+    for (int neighbor : adj[curr]) {
+        // 1. If neighbor is not visited, recurse
+        if (!visited[neighbor]) {
+            if (hasCycleDFS(neighbor, curr, adj, visited)) {
+                return true;
+            }
+        }
+        // 2. If neighbor is visited and NOT the parent, it's a cycle
+        else if (neighbor != parent) {
+            return true;
+        }
+    }
+    return false;
+}
+
+string solve() {
+    int n, m;
+    if (!(cin >> n >> m)) return "";
+
+    vector<vector<int>> adj(n);
+    for (int i = 0; i < m; i++) {
+        int u, v;
+        cin >> u >> v;
+        adj[u].push_back(v);
+        adj[v].push_back(u);
+    }
+
+    vector<bool> visited(n, false);
+
+    // Loop through all nodes to handle disconnected components
+    for (int i = 0; i < n; i++) {
+        if (!visited[i]) {
+            // Initial call: parent is -1
+            if (hasCycleDFS(i, -1, adj, visited)) {
+                return "YES";
+            }
+        }
+    }
+
+    return "NO";
+}
+
+int main() {
+    cout << solve() << endl;
+    return 0;
+}

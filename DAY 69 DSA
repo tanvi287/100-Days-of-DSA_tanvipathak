@@ -1,0 +1,48 @@
+#include <vector>
+#include <queue>
+#include <climits>
+
+class Solution {
+public:
+    /**
+     * Function to find the shortest distance of all the vertices
+     * from the source vertex S.
+     * V: number of vertices
+     * adj: adjacency list where adj[i] contains {neighbor, weight}
+     * S: source vertex
+     */
+    std::vector<int> dijkstra(int V, std::vector<std::vector<int>> adj[], int S) {
+        // Initialize distances as infinity; V+1 safely handles 1-indexing
+        std::vector<int> dist(V + 1, INT_MAX);
+        
+        // Min-priority queue to store {distance, vertex}
+        std::priority_queue<std::pair<int, int>, std::vector<std::pair<int, int>>, std::greater<std::pair<int, int>>> pq;
+
+        dist[S] = 0;
+        pq.push({0, S});
+
+        while (!pq.empty()) {
+            int d = pq.top().first;
+            int u = pq.top().second;
+            pq.pop();
+
+            // Optimization: skip if a shorter path to u has already been processed
+            if (d > dist[u]) continue;
+
+            // Relaxation step for all neighbors
+            for (auto& edge : adj[u]) {
+                int v = edge[0];
+                int weight = edge[1];
+
+                if (dist[u] + weight < dist[v]) {
+                    dist[v] = dist[u] + weight;
+                    pq.push({dist[v], v});
+                }
+            }
+        }
+        
+        // Cleanup: remove the extra element if 0-indexed logic is required
+        if (dist.size() > (size_t)V) dist.resize(V);
+        return dist;
+    }
+};

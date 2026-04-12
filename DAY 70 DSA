@@ -1,0 +1,50 @@
+#include <vector>
+#include <iostream>
+#include <climits>
+
+using namespace std;
+
+class Solution {
+public:
+    /**
+     * @param n Number of vertices
+     * @param edges Vector of edges {u, v, weight}
+     * @param src Source vertex
+     * @return Shortest distances or a specific indicator for negative cycles
+     */
+    vector<int> bellmanFord(int n, vector<vector<int>>& edges, int src) {
+        // Initialize distances with a large value (infinity)
+        // Using a safe infinity to prevent overflow during relaxation
+        int INF = 1e8; 
+        vector<int> dist(n, INF);
+        dist[src] = 0;
+
+        // 1. Relax all edges (n - 1) times
+        for (int i = 0; i < n - 1; i++) {
+            for (auto& edge : edges) {
+                int u = edge[0];
+                int v = edge[1];
+                int weight = edge[2];
+
+                if (dist[u] != INF && dist[u] + weight < dist[v]) {
+                    dist[v] = dist[u] + weight;
+                }
+            }
+        }
+
+        // 2. Detection of Negative Weight Cycle
+        // Relax edges one more time; if any distance decreases, a cycle exists
+        for (auto& edge : edges) {
+            int u = edge[0];
+            int v = edge[1];
+            int weight = edge[2];
+
+            if (dist[u] != INF && dist[u] + weight < dist[v]) {
+                // Return a specific value (like -1 or empty vector) to indicate cycle
+                return {-1}; 
+            }
+        }
+
+        return dist;
+    }
+};

@@ -1,0 +1,53 @@
+#include <iostream>
+#include <vector>
+#include <string>
+
+using namespace std;
+
+class HashTable {
+    int m;
+    vector<int> table;
+    const int EMPTY = -1;
+
+public:
+    HashTable(int size) : m(size), table(size, -1) {}
+
+    void insert(int k) {
+        for (int i = 0; i < m; i++) {
+            int pos = ( (k % m) + (i * i) ) % m;
+            if (table[pos] == EMPTY) {
+                table[pos] = k;
+                return;
+            }
+        }
+    }
+
+    string search(int k) {
+        for (int i = 0; i < m; i++) {
+            int pos = ( (k % m) + (i * i) ) % m;
+            if (table[pos] == k) return "FOUND";
+            if (table[pos] == EMPTY) break; // Optimization: Stop if we hit an empty slot
+        }
+        return "NOT FOUND";
+    }
+};
+
+int main() {
+    int m, n;
+    if (!(cin >> m >> n)) return 0;
+
+    HashTable ht(m);
+
+    while (n--) {
+        string op;
+        int key;
+        cin >> op >> key;
+        if (op == "INSERT") {
+            ht.insert(key);
+        } else if (op == "SEARCH") {
+            cout << ht.search(key) << endl;
+        }
+    }
+
+    return 0;
+}

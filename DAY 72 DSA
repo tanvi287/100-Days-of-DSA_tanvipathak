@@ -1,0 +1,31 @@
+#include <iostream>
+#include <string>
+#include <unordered_set>
+
+using namespace std;
+
+void findFirstRepeated(string s) {
+    // Hash set to store characters we have encountered
+    unordered_set<char> seen;
+
+    for (char c : s) {
+        // If the character is already in the set, this is its second occurrence
+        if (seen.find(c) != seen.end()) {
+            cout << c << endl;
+            return;
+        }
+        // Otherwise, add it to the set and keep moving
+        seen.insert(c);
+    }
+
+    // If no repeats were found
+    cout << -1 << endl;
+}
+
+int main() {
+    string s;
+    if (cin >> s) {
+        findFirstRepeated(s);
+    }
+    return 0;
+}

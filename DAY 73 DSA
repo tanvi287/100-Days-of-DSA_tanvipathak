@@ -1,0 +1,33 @@
+#include <iostream>
+#include <string>
+#include <vector>
+
+using namespace std;
+
+char firstNonRepeating(string s) {
+    // Frequency array for 26 lowercase English letters
+    vector<int> freq(26, 0);
+
+    // First pass: Count occurrences
+    for (char c : s) {
+        freq[c - 'a']++;
+    }
+
+    // Second pass: Find the first character with frequency 1
+    for (char c : s) {
+        if (freq[c - 'a'] == 1) {
+            return c;
+        }
+    }
+
+    // If no non-repeating character is found
+    return '$';
+}
+
+int main() {
+    string s;
+    if (cin >> s) {
+        cout << firstNonRepeating(s) << endl;
+    }
+    return 0;
+}

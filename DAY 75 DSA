@@ -1,0 +1,44 @@
+#include <iostream>
+#include <vector>
+#include <unordered_map>
+#include <algorithm>
+
+using namespace std;
+
+int longestZeroSumSubarray(vector<int>& arr) {
+    unordered_map<int, int> prefixMap;
+    int maxLen = 0;
+    int currentSum = 0;
+
+    for (int i = 0; i < arr.size(); i++) {
+        currentSum += arr[i];
+
+        if (currentSum == 0) {
+            // Subarray from index 0 to i has sum 0
+            maxLen = i + 1;
+        } else if (prefixMap.find(currentSum) != prefixMap.end()) {
+            // Sum seen before, calculate length of subarray between occurrences
+            maxLen = max(maxLen, i - prefixMap[currentSum]);
+        } else {
+            // First time seeing this sum, store its index
+            prefixMap[currentSum] = i;
+        }
+    }
+
+    return maxLen;
+}
+
+int main() {
+    int val;
+    vector<int> arr;
+    
+    // Reading input until end of file/line
+    while (cin >> val) {
+        arr.push_back(val);
+        if (cin.peek() == '\n' || cin.peek() == EOF) break;
+    }
+
+    cout << longestZeroSumSubarray(arr) << endl;
+
+    return 0;
+}

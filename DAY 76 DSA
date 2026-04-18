@@ -1,0 +1,46 @@
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+// Function to perform DFS and mark all nodes in a component
+void dfs(int node, const vector<vector<int>>& adj, vector<bool>& visited) {
+    visited[node] = true;
+    for (int neighbor : adj[node]) {
+        if (!visited[neighbor]) {
+            dfs(neighbor, adj, visited);
+        }
+    }
+}
+
+int main() {
+    int n, m;
+    if (!(cin >> n >> m)) return 0;
+
+    // Use n+1 to handle 1-based indexing of nodes
+    vector<vector<int>> adj(n + 1);
+    vector<bool> visited(n + 1, false);
+
+    // Building the adjacency list
+    for (int i = 0; i < m; i++) {
+        int u, v;
+        cin >> u >> v;
+        adj[u].push_back(v);
+        adj[v].push_back(u);
+    }
+
+    int componentCount = 0;
+
+    // Iterate through all nodes from 1 to n
+    for (int i = 1; i <= n; i++) {
+        if (!visited[i]) {
+            // New component found
+            componentCount++;
+            dfs(i, adj, visited);
+        }
+    }
+
+    cout << componentCount << endl;
+
+    return 0;
+}

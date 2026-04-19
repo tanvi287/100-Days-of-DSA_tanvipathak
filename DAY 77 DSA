@@ -1,0 +1,51 @@
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+// DFS to mark all reachable nodes from the starting point
+void dfs(int node, const vector<vector<int>>& adj, vector<bool>& visited) {
+    visited[node] = true;
+    for (int neighbor : adj[node]) {
+        if (!visited[neighbor]) {
+            dfs(neighbor, adj, visited);
+        }
+    }
+}
+
+int main() {
+    int n, m;
+    if (!(cin >> n >> m)) return 0;
+
+    // Use n+1 to handle 1-based indexing
+    vector<vector<int>> adj(n + 1);
+    vector<bool> visited(n + 1, false);
+
+    // Build the adjacency list
+    for (int i = 0; i < m; i++) {
+        int u, v;
+        cin >> u >> v;
+        adj[u].push_back(v);
+        adj[v].push_back(u);
+    }
+
+    // Edge case: A graph with 0 nodes or 1 node is technically connected
+    if (n <= 1) {
+        cout << "CONNECTED" << endl;
+        return 0;
+    }
+
+    // Start DFS from node 1
+    dfs(1, adj, visited);
+
+    // Check if any node was not reached
+    for (int i = 1; i <= n; i++) {
+        if (!visited[i]) {
+            cout << "NOT CONNECTED" << endl;
+            return 0;
+        }
+    }
+
+    cout << "CONNECTED" << endl;
+    return 0;
+}

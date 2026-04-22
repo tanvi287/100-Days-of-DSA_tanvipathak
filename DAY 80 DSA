@@ -1,0 +1,62 @@
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+// Define a large value for infinity that won't overflow during addition
+const int INF = 1e9;
+
+void floydWarshall(int n, vector<vector<int>>& dist) {
+    // k is the intermediate vertex
+    for (int k = 0; k < n; k++) {
+        // i is the source vertex
+        for (int i = 0; i < n; i++) {
+            // j is the destination vertex
+            for (int j = 0; j < n; j++) {
+                // If path through k exists and is shorter than current path
+                if (dist[i][k] != INF && dist[k][j] != INF) {
+                    if (dist[i][k] + dist[k][j] < dist[i][j]) {
+                        dist[i][j] = dist[i][k] + dist[k][j];
+                    }
+                }
+            }
+        }
+    }
+}
+
+int main() {
+    int n;
+    if (!(cin >> n)) return 0;
+
+    vector<vector<int>> dist(n, vector<int>(n));
+
+    // Input processing
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++) {
+            int val;
+            cin >> val;
+            // Convert -1 to INF, keeping 0 for diagonals and actual weights
+            if (val == -1 && i != j) {
+                dist[i][j] = INF;
+            } else {
+                dist[i][j] = val;
+            }
+        }
+    }
+
+    floydWarshall(n, dist);
+
+    // Output the resulting shortest distance matrix
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++) {
+            if (dist[i][j] == INF) {
+                cout << -1 << " ";
+            } else {
+                cout << dist[i][j] << " ";
+            }
+        }
+        cout << endl;
+    }
+
+    return 0;
+}

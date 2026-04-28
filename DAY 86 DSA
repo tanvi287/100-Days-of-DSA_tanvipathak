@@ -1,0 +1,45 @@
+#include <iostream>
+
+using namespace std;
+
+/**
+ * Finds the integer square root of n using Binary Search.
+ * Time Complexity: O(log n)
+ * Space Complexity: O(1)
+ */
+long long integerSquareRoot(long long n) {
+    if (n < 2) return n;
+
+    long long low = 0;
+    long long high = n;
+    long long ans = 0;
+
+    while (low <= high) {
+        long long mid = low + (high - low) / 2;
+        
+        // Use mid <= n/mid to prevent overflow during squaring
+        if (mid == 0) {
+            low = mid + 1;
+            continue;
+        }
+
+        if (mid * mid == n) {
+            return mid;
+        } else if (mid * mid < n) {
+            ans = mid;      // Store mid as a potential answer
+            low = mid + 1;  // Look for a larger value in the right half
+        } else {
+            high = mid - 1; // Look for a smaller value in the left half
+        }
+    }
+    return ans;
+}
+
+int main() {
+    long long n;
+    if (!(cin >> n)) return 0;
+
+    cout << integerSquareRoot(n) << endl;
+
+    return 0;
+}

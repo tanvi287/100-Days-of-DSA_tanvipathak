@@ -1,0 +1,72 @@
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+// Merges two sorted subarrays into a single sorted section
+void merge(vector<int>& arr, int low, int mid, int high) {
+    vector<int> temp;
+    int left = low;      // Pointer for the left subarray
+    int right = mid + 1; // Pointer for the right subarray
+
+    // Compare elements and pick the smaller one to add to temp
+    while (left <= mid && right <= high) {
+        if (arr[left] <= arr[right]) {
+            temp.push_back(arr[left]);
+            left++;
+        } else {
+            temp.push_back(arr[right]);
+            right++;
+        }
+    }
+
+    // Add remaining elements from the left side, if any
+    while (left <= mid) {
+        temp.push_back(arr[left]);
+        left++;
+    }
+
+    // Add remaining elements from the right side, if any
+    while (right <= high) {
+        temp.push_back(arr[right]);
+        right++;
+    }
+
+    // Copy the sorted elements back into the original array
+    for (int i = low; i <= high; i++) {
+        arr[i] = temp[i - low];
+    }
+}
+
+// Recursive function to divide the array
+void mergeSort(vector<int>& arr, int low, int high) {
+    if (low >= high) return; // Base case: subarray has 1 or 0 elements
+
+    int mid = low + (high - low) / 2;
+
+    mergeSort(arr, low, mid);      // Recursively sort the left half
+    mergeSort(arr, mid + 1, high); // Recursively sort the right half
+    merge(arr, low, mid, high);    // Merge the sorted halves together
+}
+
+int main() {
+    int n;
+    if (!(cin >> n)) return 0;
+
+    vector<int> arr(n);
+    for (int i = 0; i < n; i++) {
+        cin >> arr[i];
+    }
+
+    if (n > 1) {
+        mergeSort(arr, 0, n - 1);
+    }
+
+    // Print the sorted array
+    for (int i = 0; i < n; i++) {
+        cout << arr[i] << (i == n - 1 ? "" : " ");
+    }
+    cout << endl;
+
+    return 0;
+}

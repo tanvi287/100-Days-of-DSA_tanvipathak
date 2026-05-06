@@ -1,0 +1,53 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+void countingSort(vector<int>& arr) {
+    if (arr.empty()) return;
+
+    // 1. Find the maximum element to define the range
+    int maxVal = *max_element(arr.begin(), arr.end());
+
+    // 2. Build frequency array initialized to 0
+    vector<int> count(maxVal + 1, 0);
+    for (int num : arr) {
+        count[num]++;
+    }
+
+    // 3. Compute prefix sums (cumulative counts)
+    for (int i = 1; i <= maxVal; i++) {
+        count[i] += count[i - 1];
+    }
+
+    // 4. Build the output array
+    vector<int> output(arr.size());
+    // Traverse in reverse to ensure the sort is stable
+    for (int i = arr.size() - 1; i >= 0; i--) {
+        output[count[arr[i]] - 1] = arr[i];
+        count[arr[i]]--;
+    }
+
+    // Copy the sorted elements back to the original array
+    arr = output;
+}
+
+int main() {
+    int n;
+    if (!(cin >> n)) return 0;
+
+    vector<int> arr(n);
+    for (int i = 0; i < n; i++) {
+        cin >> arr[i];
+    }
+
+    countingSort(arr);
+
+    for (int i = 0; i < n; i++) {
+        cout << arr[i] << (i == n - 1 ? "" : " ");
+    }
+    cout << endl;
+
+    return 0;
+}

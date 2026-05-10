@@ -1,0 +1,31 @@
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+class Solution {
+public:
+    vector<vector<int>> merge(vector<vector<int>>& intervals) {
+        if (intervals.empty()) return {};
+
+        // 1. Sort intervals by start time
+        sort(intervals.begin(), intervals.end());
+
+        vector<vector<int>> merged;
+        // 2. Start with the first interval
+        merged.push_back(intervals[0]);
+
+        for (int i = 1; i < intervals.size(); i++) {
+            // Compare current interval with the last one in merged
+            if (intervals[i][0] <= merged.back()[1]) {
+                // Overlap found: merge them by updating the end time
+                merged.back()[1] = max(merged.back()[1], intervals[i][1]);
+            } else {
+                // No overlap: add as a new interval
+                merged.push_back(intervals[i]);
+            }
+        }
+
+        return merged;
+    }
+};

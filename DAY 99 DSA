@@ -1,0 +1,40 @@
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+class Solution {
+public:
+    int carFleet(int target, vector<int>& position, vector<int>& speed) {
+        int n = position.size();
+        if (n == 0) return 0;
+
+        // Pair positions with their corresponding speeds
+        vector<pair<int, int>> cars(n);
+        for (int i = 0; i < n; i++) {
+            cars[i] = {position[i], speed[i]};
+        }
+
+        // Sort cars by position in descending order (closest to target first)
+        sort(cars.begin(), cars.end(), [](const pair<int, int>& a, const pair<int, int>& b) {
+            return a.first > b.first;
+        });
+
+        int fleets = 0;
+        double lastTimeToTarget = -1.0;
+
+        for (int i = 0; i < n; i++) {
+            // Time = (Target - Current Position) / Speed
+            double currentTimeToTarget = (double)(target - cars[i].first) / cars[i].second;
+
+            // If this car takes more time than the fleet ahead, it starts a new fleet
+            if (currentTimeToTarget > lastTimeToTarget) {
+                fleets++;
+                lastTimeToTarget = currentTimeToTarget;
+            }
+            // Otherwise, it catches up and becomes part of the existing fleet
+        }
+
+        return fleets;
+    }
+};

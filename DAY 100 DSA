@@ -1,0 +1,63 @@
+#include <vector>
+#include <numeric>
+
+class Solution {
+public:
+    std::vector<int> countSmaller(std::vector<int>& nums) {
+        int n = nums.size();
+        std::vector<int> counts(n, 0);
+        std::vector<int> indices(n);
+        // Initialize indices: [0, 1, 2, ..., n-1]
+        std::iota(indices.begin(), indices.end(), 0);
+
+        mergeSort(nums, indices, counts, 0, n - 1);
+        return counts;
+    }
+
+private:
+    void mergeSort(std::vector<int>& nums, std::vector<int>& indices, 
+                   std::vector<int>& counts, int left, int right) {
+        if (left >= right) return;
+
+        int mid = left + (right - left) / 2;
+        mergeSort(nums, indices, counts, left, mid);
+        mergeSort(nums, indices, counts, mid + 1, right);
+        
+        merge(nums, indices, counts, left, mid, right);
+    }
+
+    void merge(std::vector<int>& nums, std::vector<int>& indices, 
+               std::vector<int>& counts, int left, int mid, int right) {
+        std::vector<int> temp(right - left + 1);
+        int i = left;      // Pointer for left half
+        int j = mid + 1;   // Pointer for right half
+        int k = 0;
+        int rightCount = 0; // Tracks how many elements from right side are smaller
+
+        while (i <= mid && j <= right) {
+            if (nums[indices[j]] < nums[indices[i]]) {
+                // Element on the right is smaller
+                rightCount++;
+                temp[k++] = indices[j++];
+            } else {
+                // Element on the left is moved; add the count of smaller right elements
+                counts[indices[i]] += rightCount;
+                temp[k++] = indices[i++];
+            }
+        }
+
+        // Clean up remaining elements
+        while (i <= mid) {
+            counts[indices[i]] += rightCount;
+            temp[k++] = indices[i++];
+        }
+        while (j <= right) {
+            temp[k++] = indices[j++];
+        }
+
+        // Copy temp back to indices
+        for (int p = 0; p < temp.size(); p++) {
+            indices[left + p] = temp[p];
+        }
+    }
+};
